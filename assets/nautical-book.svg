@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="leather" x1="0%" y1="0%" x2="0%" y2="100%"><stop stop-color="#38666b"/><stop offset=".5" stop-color="#1b3c42"/><stop offset="1" stop-color="#2c5258"/></linearGradient>
+    <linearGradient id="left"><stop stop-color="#c5b99b"/><stop offset=".06" stop-color="#eee2c6"/><stop offset=".48" stop-color="#f8f0dd"/><stop offset=".88" stop-color="#e5d8b8"/><stop offset="1" stop-color="#a8a28a"/></linearGradient>
+    <linearGradient id="right"><stop stop-color="#9b9f8d"/><stop offset=".08" stop-color="#e0d6b8"/><stop offset=".25" stop-color="#f0e6cc"/><stop offset=".85" stop-color="#faf1df"/><stop offset="1" stop-color="#c7bfa3"/></linearGradient>
+    <linearGradient id="gutter"><stop stop-color="#344e4e" stop-opacity="0"/><stop offset=".46" stop-color="#344e4e" stop-opacity=".16"/><stop offset=".5" stop-color="#203b3e" stop-opacity=".65"/><stop offset=".55" stop-color="#fff8df" stop-opacity=".3"/><stop offset="1" stop-color="#344e4e" stop-opacity="0"/></linearGradient>
+    <radialGradient id="age"><stop offset=".55" stop-color="#958359" stop-opacity="0"/><stop offset="1" stop-color="#958254" stop-opacity=".16"/></radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#000" flood-opacity=".5"/></filter>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".06"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+    <clipPath id="paper"><path d="M30 30Q315 8 600 38Q885 8 1170 30L1170 710Q886 693 600 728Q314 693 30 710Z"/></clipPath>
+  </defs>
+  <path d="M14 22Q306 1 600 28Q894 1 1186 22L1186 734Q889 713 600 746Q311 713 14 734Z" fill="url(#leather)" stroke="#173238" stroke-width="4" filter="url(#shadow)"/>
+  <path d="M22 30Q308 10 600 37Q892 10 1178 30L1178 725Q889 706 600 738Q311 706 22 725Z" fill="none" stroke="#bfaa71" stroke-opacity=".65" stroke-dasharray="6 3"/>
+  <path d="M30 48Q315 26 600 52Q885 26 1170 48L1170 722Q886 705 600 738Q314 705 30 722Z" fill="#b7ad8c" stroke="#4d6660"/>
+  <path d="M30 715Q315 699 600 732Q885 699 1170 715M30 719Q315 703 600 735Q885 703 1170 719" fill="none" stroke="#eee3bf" stroke-width="2" opacity=".65"/>
+  <path d="M30 30Q315 8 600 38L600 728Q314 693 30 710Z" fill="url(#left)"/>
+  <path d="M600 38Q885 8 1170 30L1170 710Q886 693 600 728Z" fill="url(#right)"/>
+  <g clip-path="url(#paper)"><rect x="30" y="15" width="1140" height="720" fill="url(#age)"/><rect x="30" y="15" width="1140" height="720" opacity=".5" filter="url(#grain)" fill="transparent"/></g>
+  <path d="M560 34L640 34L640 724L560 724Z" fill="url(#gutter)"/>
+  <path d="M45 43Q310 22 573 47M627 47Q890 22 1155 43" fill="none" stroke="#fff9e8" stroke-opacity=".65" stroke-width="2"/>
+  <g fill="none" stroke="#8a916f" stroke-width="1" opacity=".5"><path d="M60 78V57H82M60 663V685H82M1140 78V57H1118M1140 663V685H1118"/><path d="M66 72V63H76M66 668V679H76M1134 72V63H1124M1134 668V679H1124"/></g>
+  <g fill="none" stroke="#5c8079" opacity=".22" stroke-width=".8">
+    <path d="M45 100V625M1155 100V625M41 125H51M41 150H51M41 175H51M41 200H51M41 225H51M41 250H51M41 275H51M41 300H51M41 325H51M41 350H51M41 375H51M41 400H51M41 425H51M41 450H51M41 475H51M41 500H51M41 525H51M41 550H51M41 575H51M41 600H51"/>
+    <path d="M1149 125H1159M1149 150H1159M1149 175H1159M1149 200H1159M1149 225H1159M1149 250H1159M1149 275H1159M1149 300H1159M1149 325H1159M1149 350H1159M1149 375H1159M1149 400H1159M1149 425H1159M1149 450H1159M1149 475H1159M1149 500H1159M1149 525H1159M1149 550H1159M1149 575H1159M1149 600H1159"/>
+  </g>
+  <g fill="none" stroke="#938154" stroke-width="1" opacity=".6">
+    <circle cx="545" cy="66" r="13"/><path d="M545 47V85M526 66H564M545 54L549 66L545 78L541 66ZM533 66L545 62L557 66L545 70Z"/>
+    <circle cx="655" cy="66" r="13"/><path d="M655 47V85M636 66H674M655 54L659 66L655 78L651 66ZM643 66L655 62L667 66L655 70Z"/>
+    <path d="M87 43q12 -7 24 0t24 0t24 0M1041 43q12 -7 24 0t24 0t24 0"/>
+  </g>
+</svg>

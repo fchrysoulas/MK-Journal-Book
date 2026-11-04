@@ -1,0 +1,127 @@
+<!doctype html><html><head><meta charset="UTF-8"><title>MK Journal Book — development harness</title>
+<link rel="stylesheet" href="../styles/book.css"><link rel="stylesheet" href="../styles/presets.css"><style>
+*{box-sizing:border-box}body{margin:0;background:#121614;min-height:100vh}button,input,select{font:inherit}button{cursor:pointer}.mk-journal-book{display:flex;flex-direction:column;width:min(1120px,calc(100vw - 30px));height:min(780px,calc(100vh - 30px));}.window-header{height:32px;flex-shrink:0;padding:6px 14px;font:12px Arial}.window-content{flex:1;min-height:0}.window-content h1,.window-content h2{font-weight:normal}
+</style></head><body><script type="module">
+// Test fixtures only. Never loaded by module.json.
+const hooks=new Map();
+globalThis.Hooks={on(name,fn){if(!hooks.has(name))hooks.set(name,[]);hooks.get(name).push(fn)},once(name,fn){this.on(name,fn)},call(name,...args){for(const fn of hooks.get(name)??[])fn(...args)}};
+class ApplicationV2 {
+  constructor(options={}){const chain=[];let cls=this.constructor;while(cls&&cls!==Function.prototype){if(Object.hasOwn(cls,'DEFAULT_OPTIONS'))chain.unshift(cls.DEFAULT_OPTIONS);cls=Object.getPrototypeOf(cls)}this.options={};for(const value of [...chain,options])this.options={...this.options,...value,window:{...this.options.window,...value.window},position:{...this.options.position,...value.position}};this.position={...this.options.position};this.rendered=false}
+  async render(){
+    if(!this.element){
+      this.element=document.createElement('div');this.element.className='application mk-journal-book';this.element.id=this.options.id;
+      if(this.options.window.frame)this.element.innerHTML='<header class="window-header">MK Journal Book</header><section class="window-content"></section>';
+      if(!window.mkTestDetachedFirstRender)document.body.append(this.element);
+      this.element.addEventListener('pointerdown',()=>this.bringToFront());
+    }
+    this.rendered=true;
+    this.setPosition(this.position);
+    if(window.mkTestMountScale)this.element.style.transform=`scale(${window.mkTestMountScale})`;
+    this._replaceHTML(await this._renderHTML(),this.element.querySelector('.window-content')??this.element);
+    if(!this.element.isConnected)document.body.append(this.element);
+    if(window.mkTestPostRenderDelay)await new Promise(resolve=>setTimeout(resolve,window.mkTestPostRenderDelay));
+    return this;
+  }
+  bringToFront(){if(this.element)this.element.style.zIndex=String(++ApplicationV2.front)}
+  static front=100;
+  setPosition(position){if(!this.options.window.positioned)return this.position;Object.assign(this.position,position);for(const [key,value] of Object.entries(this.position))if(Number.isFinite(value))this.element.style[key]=value+'px';return this.position}
+  async close(options={}){(window.closeCalls??=[]).push({id:this.options.id,options});this.element?.remove();this.element=null;this.rendered=false;return this}
+}
+class DocumentSheetV2 extends ApplicationV2 {
+  get document(){return this.options.document}
+}
+const sheets=new Map();
+// Form-associated file picker stand-in, matching the production component's value contract.
+customElements.define('file-picker', class extends HTMLElement {
+ static formAssociated=true;
+ constructor(){super();this._internals=this.attachInternals()}
+ connectedCallback(){if(this.input)return;this.input=document.createElement('input');this.input.type='text';this.input.setAttribute('aria-label',this.getAttribute('name'));this.input.value=this.getAttribute('value')??'';this.append(this.input);this.input.addEventListener('input',()=>this._internals.setFormValue(this.input.value));this._internals.setFormValue(this.input.value)}
+ get value(){return this.input?.value??this.getAttribute('value')??''}
+ set value(value){if(this.input)this.input.value=value;this._internals.setFormValue(value)}
+});
+class DialogV2 {
+  static async prompt(options){
+    window.lastDialogOptions=options;
+    return new Promise(resolve=>{
+      const dialog=document.createElement('dialog');dialog.innerHTML=`<h2>${options.window?.title??''}</h2><form>${options.content}<button type="submit">${options.ok?.label??'OK'}</button><button type="button" data-cancel>Cancel</button></form>`;
+      document.body.append(dialog);dialog.showModal();options.render?.(new Event('render'),{element:dialog});
+      dialog.querySelector('form').addEventListener('submit',async event=>{event.preventDefault();try{const result=await options.ok.callback(event,event.submitter);dialog.close();dialog.remove();resolve(result)}catch(error){window.messages.push(error.message)}});
+      dialog.querySelector('[data-cancel]').onclick=()=>{dialog.close();dialog.remove();resolve(null)};
+      dialog.addEventListener('cancel',()=>{dialog.remove();resolve(null)});
+    });
+  }
+}
+globalThis.foundry={data:{fields:{NumberField:class {constructor(options){this.options=options}},FilePathField:class {constructor(options){this.options=options}}}},applications:{api:{ApplicationV2,DocumentSheetV2,DialogV2},apps:{DocumentSheetConfig:{registerSheet(_doc,scope,cls){sheets.set(`${scope}.${cls.name}`,cls)}}},ux:{TextEditor:{implementation:{getDragEventData(event){try{return JSON.parse(event.dataTransfer.getData('text/plain'))}catch{return {}}},async enrichHTML(html){await new Promise(r=>setTimeout(r,5));return html}}}}}};
+// Local sound backend for lifecycle tests; production uses Foundry's Sound API.
+window.soundEvents=[];
+foundry.audio={Sound:class {
+  constructor(src,options){this.src=src;this.context=options.context;this.playing=false;this.loaded=false;this.timer=null;soundEvents.push({event:'create',src})}
+  async load(options){soundEvents.push({event:'load',src:this.src,options});if(window.soundLoadGate)await window.soundLoadGate;if(window.failSoundLoad)throw new Error('Missing audio fixture');this.loaded=true;return this}
+  async play(options){soundEvents.push({event:'play',src:this.src,volume:options.volume,loop:options.loop,time:performance.now()});if(window.failSoundPlay)throw new Error('Audio blocked');if(window.soundPlayGate)await window.soundPlayGate;this.playing=true;this.timer=setTimeout(()=>{this.playing=false;options.onended?.()},800);return this}
+  stop(){clearTimeout(this.timer);this.playing=false;soundEvents.push({event:'stop',src:this.src})}
+}};
+class JournalEntry {
+  static canUserCreate(user){return user.isGM||user.canCreateJournals===true}
+  static defaultName(){return 'New Journal Entry'}
+  static async createDialog(data,creation,options){window.originalCreateDialogArgs=[data,creation,options];return 'original'}
+  static async create(data,options){
+    if(!this.canUserCreate(game.user))throw new Error('Creation denied');
+    const journal=new JournalEntry(data);game.journal.push(journal);Hooks.call('createJournalEntry',journal);window.createdJournal=journal;return journal;
+  }
+  constructor(data){Object.assign(this,structuredClone(data));this.id='B'+(++JournalEntry.next);this.uuid=`JournalEntry.${this.id}`;this.documentName='JournalEntry';this.pages=[];this.flags??={};this.ownership??={default:0,[game.user.id]:3}}
+  async updateEmbeddedDocuments(type,updates){const result=[];for(const update of updates){const page=this.pages.find(p=>p.id===update._id);if(page){await page.update(update);result.push(page)}}return result}
+  static next=0;
+  getFlag(scope,key){return this.flags[scope]?.[key]}
+  async setFlag(scope,key,value){return this.update({[`flags.${scope}.${key}`]:value})}
+  async update(changes){
+    if(!this.testUserPermission(game.user,'OWNER'))throw new Error('Update denied');
+    for(const [path,value]of Object.entries(changes)){let target=this;const parts=path.split('.');for(const part of parts.slice(0,-1))target=target[part]??={};target[parts.at(-1)]=structuredClone(value)}Hooks.call('updateJournalEntry',this);return this;
+  }
+  testUserPermission(user,level){return user.isGM||(this.ownership[user.id]??this.ownership.default??0)>={NONE:0,LIMITED:1,OBSERVER:2,OWNER:3}[level]}
+  get sheet(){if(!this._sheet){const Sheet=sheets.get(this.getFlag('core','sheetClass'));this._sheet=Sheet?new Sheet({document:this}):{render:async()=>{window.normalJournalOpened=this.id}}}return this._sheet}
+}
+globalThis.CONFIG={JournalEntry:{documentClass:JournalEntry}};
+
+globalThis.CONST={JOURNAL_ENTRY_PAGE_FORMATS:{HTML:1,MARKDOWN:2}};
+window.messages=[];globalThis.ui={notifications:{error:message=>messages.push(message),warn:message=>messages.push(message),info:message=>messages.push(message)}};
+const gm={id:'gm',name:'Game Master',isGM:true},alice={id:'alice',name:'Alice',isGM:false},bob={id:'bob',name:'Bob',isGM:false};
+for(const user of [gm,alice,bob]){
+ user.flags={};
+ user.getFlag=(scope,key)=>user.flags[scope]?.[key];
+ user.setFlag=async(scope,key,value)=>{
+  if(game.user!==user)throw new Error('Cannot update another user');
+  let target=user.flags[scope]??={};const parts=key.split('.');for(const part of parts.slice(0,-1))target=target[part]??={};target[parts.at(-1)]=structuredClone(value);
+  Hooks.call('updateUser',user,{[`flags.${scope}.${key}`]:value});return user;
+ };
+}
+const settingValues=new Map();window.settingDefinitions=new Map();
+globalThis.game={audio:{locked:false,globalMute:false,interface:{}},user:alice,users:[gm,alice,bob],folders:[{id:'F',name:'Campaign',type:'JournalEntry'}],journal:[],modules:new Map([['mk-journal-book',{}]]),settings:{register(id,key,options){settingValues.set(key,options.default);settingDefinitions.set(key,options)},get(id,key){return settingValues.get(key)},async set(id,key,value){settingValues.set(key,value);settingDefinitions.get(key)?.onChange?.(value);return value}},keybindings:{register(){}}};
+const grants={default:2};
+const journal={id:'J',uuid:'JournalEntry.J',documentName:'JournalEntry',async updateEmbeddedDocuments(type,updates){window.batchUpdates=updates;for(const update of updates)await this.pages.find(p=>p.id===update._id).update(update);return this.pages.filter(p=>updates.some(u=>u._id===p.id))},name:'The Northern Coast',folder:null,pages:[],getFlag(){},testUserPermission(user,level){return user.isGM||(grants[user.id]??grants.default)>={LIMITED:1,OBSERVER:2,OWNER:3}[level]},sheet:{async render(options){window.openedOriginal=options}}};
+function add(id,name,category,html,permissions={default:2},type='text',src=''){
+  const flags={category};
+  const page={id,uuid:`JournalEntry.J.JournalEntryPage.${id}`,name,type,src,sort:journal.pages.length,parent:journal,documentName:'JournalEntryPage',text:{content:html,format:1},permissions,ownership:permissions,
+    getFlag(_id,key){return flags[key]},async setFlag(_id,key,value){let target=flags;const parts=key.split('.');for(const part of parts.slice(0,-1))target=target[part]??={};target[parts.at(-1)]=value;Hooks.call('updateJournalEntryPage',page)},async unsetFlag(_id,key){delete flags[key];Hooks.call('updateJournalEntryPage',page)},
+    async update(changes){window.lastPageUpdate=changes;if(changes.ownership){Object.assign(permissions,changes.ownership)}if('flags.mk-journal-book.included' in changes)flags.included=changes['flags.mk-journal-book.included'];Hooks.call('updateJournalEntryPage',page);return page},
+    testUserPermission(user,level){return user.isGM||(permissions[user.id]??permissions.default??0)>={LIMITED:1,OBSERVER:2,OWNER:3}[level]}};
+  journal.pages.push(page);return page;
+}
+const harbor=add('01','The Lantern Harbor','locations','<p>At the edge of the northern sea, a hundred lanterns burn through the salt-heavy mist. Their reflections tremble on water the color of old silver.</p><blockquote><p>“If the lanterns go dark, do not follow the bells.”</p></blockquote><h2>A haven between tides</h2><p>Beyond the breakwater lies a crooked harbor of weathered timber, steep roofs, and narrow streets. Travelers arrive here with stories. Some leave with different ones.</p><h3>Places of interest</h3><ul><li><strong>The Last Light.</strong> A harborside inn kept by Mara Venn.</li><li><strong>The Old Watchtower.</strong> A ruined beacon overlooking the bay.</li><li><strong>The Salt Market.</strong> Open from first light until the tide turns.</li></ul><section class="secret"><h2>Unrevealed conspiracy</h2>SECRET_MARKER</section><section class="secret revealed"><p>REVEALED_MARKER: the lower vault is now open.</p></section>');
+add('02','The Old Watchtower','locations','<p>The watchtower keeps its silent vigil.</p>');
+add('03','Mara Venn','characters','<p>The keeper of the Last Light is never seen without a silver key.</p>');
+add('04','Captain Edrin','characters','<p>A retired sailor with a tide chart tattooed on his arm.</p>');
+add('05','A Letter in the Rain','notes','<p>We found the letter beneath the broken seal.</p>');
+add('06','Session I · The Arrival','notes','<p>The company reached the coast just after sundown.</p>');
+add('07','Bob’s private clue','notes','<p>PRIVATE_BOB</p>',{bob:2});
+add('08','The hidden villain','notes','<p>GM_SECRET</p>',{default:0});
+game.journal.push(journal);
+game.journal.get=id=>game.journal.find(j=>j.id===id);
+globalThis.fromUuid=async uuid=>game.journal.find(j=>j.uuid===uuid)??game.journal.flatMap(j=>Array.from(j.pages)).find(p=>p.uuid===uuid);
+window.fixtures={gm,alice,bob,journal,harbor,add};
+const {openBook}=await import('../scripts/main.js');
+Hooks.call('init');Hooks.call('ready');
+// Earlier regression suites opt into the original opening/hover behavior.
+await game.settings.set('mk-journal-book','alwaysStartAtIndex',true);
+await game.settings.set('mk-journal-book','noteHoverDelay',0);
+window.book=await openBook({legacy:true});window.testReady=true;
+</script></body></html>

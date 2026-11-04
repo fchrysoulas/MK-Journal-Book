@@ -1,0 +1,10 @@
+{
+  "name": "mk-journal-book",
+  "version": "0.14.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check scripts/main.js && node --check scripts/core.js && node --check scripts/view.js && node --check scripts/journals.js && node --check scripts/flip.js && node --check scripts/bookmarks.js && node --check scripts/presets.js && node --check scripts/sounds.js && node --check scripts/notes.js && node --check scripts/note-layout.js && node --check scripts/note-peek.js && node --check scripts/reading.js && node --check scripts/ordering.js && node --check scripts/presentation.js && node --check scripts/cover.js && node --check scripts/image-viewer.js && npm test"
+  }
+}

@@ -1,0 +1,93 @@
+/* The same palette and artwork are inherited by live pages and flip snapshots. */
+.mk-journal-book .mkjb-shell {
+  --mkjb-book-image: url("../assets/open-book.svg");
+  --mkjb-cover-image: url("../assets/classic-cover.svg"); --mkjb-cover-ink: #e3c58e;
+  --mkjb-body-font: Georgia, "Times New Roman", serif;
+  --mkjb-heading-font: Georgia, "Times New Roman", serif;
+  --mkjb-body-size: 16px; --mkjb-line-height: 1.65;
+  --mkjb-title-size: 34px; --mkjb-title-compact: 28px; --mkjb-heading-weight: 400;
+  --mkjb-index-size: 13px; --mkjb-title-tracking: 0;
+  --mkjb-ink: #433023; --mkjb-text: #463727; --mkjb-muted: #786044;
+  --mkjb-accent: #7e3f2f; --mkjb-line: #a085564f; --mkjb-tint: #bda57925;
+  --mkjb-tab-paper: #d2b98b; --mkjb-tab-ink: #36291e; --mkjb-paper: #ebddbc;
+  --mkjb-cover: #5d5647;
+}
+.mk-journal-book .mkjb-shell[data-mkjb-style="gothic"] {
+  --mkjb-book-image: url("../assets/gothic-book.svg");
+  --mkjb-cover-image: url("../assets/gothic-cover.svg"); --mkjb-cover-ink: #e4d0a4;
+  --mkjb-body-font: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --mkjb-heading-font: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --mkjb-body-size: 17px; --mkjb-line-height: 1.6;
+  --mkjb-title-size: 36px; --mkjb-title-compact: 29px; --mkjb-heading-weight: 600;
+  --mkjb-index-size: 14px; --mkjb-title-tracking: .015em;
+  --mkjb-ink: #3e2338; --mkjb-text: #3c3039; --mkjb-muted: #6e5b65;
+  --mkjb-accent: #75324e; --mkjb-line: #7b61744c; --mkjb-tint: #8d64701c;
+  --mkjb-tab-paper: #d6c7a9; --mkjb-tab-ink: #3c2035; --mkjb-paper: #ebe4d6;
+  --mkjb-cover: #492b43;
+}
+.mk-journal-book .mkjb-shell[data-mkjb-style="field"] {
+  --mkjb-book-image: url("../assets/field-book.svg");
+  --mkjb-cover-image: url("../assets/field-cover.svg"); --mkjb-cover-ink: #354736;
+  --mkjb-body-font: "Segoe UI", Arial, sans-serif;
+  --mkjb-heading-font: "Segoe UI", Arial, sans-serif;
+  --mkjb-body-size: 15px; --mkjb-line-height: 1.65;
+  --mkjb-title-size: 28px; --mkjb-title-compact: 24px; --mkjb-heading-weight: 600;
+  --mkjb-index-size: 12px; --mkjb-title-tracking: -.02em;
+  --mkjb-ink: #283e32; --mkjb-text: #34443a; --mkjb-muted: #5f705f;
+  --mkjb-accent: #3c674d; --mkjb-line: #74876b4d; --mkjb-tint: #78926e1b;
+  --mkjb-tab-paper: #c8d3b9; --mkjb-tab-ink: #2b4132; --mkjb-paper: #edf1e2;
+  --mkjb-cover: #405742;
+}
+.mk-journal-book .mkjb-shell[data-mkjb-style="arcane"] {
+  --mkjb-book-image: url("../assets/arcane-book.svg");
+  --mkjb-cover-image: url("../assets/arcane-cover.svg"); --mkjb-cover-ink: #e0e3f4;
+  --mkjb-body-font: Baskerville, "Baskerville Old Face", "Palatino Linotype", Georgia, serif;
+  --mkjb-heading-font: "Times New Roman", Baskerville, serif;
+  --mkjb-body-size: 17px; --mkjb-line-height: 1.6;
+  --mkjb-title-size: 34px; --mkjb-title-compact: 28px; --mkjb-heading-weight: 600;
+  --mkjb-index-size: 14px; --mkjb-title-tracking: .025em;
+  --mkjb-ink: #30324e; --mkjb-text: #373849; --mkjb-muted: #63647d;
+  --mkjb-accent: #51558b; --mkjb-line: #74768d4f; --mkjb-tint: #6b709f1b;
+  --mkjb-tab-paper: #d5d7e5; --mkjb-tab-ink: #2c3154; --mkjb-paper: #eeeef1;
+  --mkjb-cover: #343a68;
+}
+.mk-journal-book .mkjb-shell[data-mkjb-style="nautical"] {
+  --mkjb-book-image: url("../assets/nautical-book.svg");
+  --mkjb-cover-image: url("../assets/nautical-cover.svg"); --mkjb-cover-ink: #ecd4a1;
+  --mkjb-body-font: Cambria, Georgia, "Times New Roman", serif;
+  --mkjb-heading-font: Georgia, "Times New Roman", serif;
+  --mkjb-body-size: 15px; --mkjb-line-height: 1.55;
+  --mkjb-title-size: 30px; --mkjb-title-compact: 25px; --mkjb-heading-weight: 700;
+  --mkjb-index-size: 12px; --mkjb-title-tracking: .01em;
+  --mkjb-ink: #244b4c; --mkjb-text: #344644; --mkjb-muted: #626f66;
+  --mkjb-accent: #386c70; --mkjb-line: #8b89624f; --mkjb-tint: #527e761b;
+  --mkjb-tab-paper: #d9cead; --mkjb-tab-ink: #244849; --mkjb-paper: #eee4cb;
+  --mkjb-cover: #285356;
+}
+.mk-journal-book .mkjb-shell {font-family: var(--mkjb-body-font); color: var(--mkjb-text);}
+.mk-journal-book .mkjb-page-title {font-family: var(--mkjb-heading-font); font-size: var(--mkjb-title-size); font-weight: var(--mkjb-heading-weight); letter-spacing: var(--mkjb-title-tracking); color: var(--mkjb-ink);}
+.mk-journal-book .mkjb-content {font-family: var(--mkjb-body-font); font-size: var(--mkjb-body-size); line-height: var(--mkjb-line-height); color: var(--mkjb-text);}
+.mk-journal-book .mkjb-content :is(h1,h2,h3,h4) {font-family: var(--mkjb-heading-font); font-weight: var(--mkjb-heading-weight); color: var(--mkjb-ink);}
+.mk-journal-book .mkjb-content h1 {font-size: 1.65em;}
+.mk-journal-book .mkjb-content h2 {font-size: 1.4em;}
+.mk-journal-book .mkjb-content h3 {font-size: 1.2em;}
+.mk-journal-book .mkjb-content :is(a,a.content-link,a.inline-roll) {color: var(--mkjb-accent);}
+.mk-journal-book .mkjb-content :is(a.content-link,a.inline-roll) {background: var(--mkjb-tint); border-color: var(--mkjb-line);}
+.mk-journal-book .mkjb-content blockquote {border-color: var(--mkjb-accent); background: var(--mkjb-tint);}
+.mk-journal-book .mkjb-content :is(table,th) {color: var(--mkjb-text); background: var(--mkjb-tint);}
+.mk-journal-book .mkjb-content :is(th,td) {border-color: var(--mkjb-line);}
+.mk-journal-book :is(.mkjb-kicker,.mkjb-page-meta,.mkjb-page-meta button,.mkjb-source,.mkjb-tag-edit,.mkjb-pagination,.mkjb-pagination button,.mkjb-book-controls button,.mkjb-resize,.mkjb-bookmark-toggle,.mkjb-content figcaption) {color: var(--mkjb-muted);}
+.mk-journal-book :is(.mkjb-source,.mkjb-pagination) {border-color: var(--mkjb-line);}
+.mk-journal-book :is(.mkjb-source,.mkjb-pagination,.mkjb-pagination button,.mkjb-content figcaption) {font-family: var(--mkjb-body-font);}
+.mk-journal-book .mkjb-tab {font-family: var(--mkjb-body-font);}
+.mk-journal-book .mkjb-tab[data-mkjb-tab="all"] {background: var(--mkjb-cover);}
+.mk-journal-book .mkjb-tab.active {background: var(--mkjb-tab-paper); color: var(--mkjb-tab-ink);}
+.mk-journal-book .mkjb-remove {color: var(--mkjb-accent);}
+.mk-journal-book .mkjb-bookmark-toggle.is-bookmarked {color: var(--ribbon-color);}
+.mk-journal-book .mkjb-empty h1 {font-family: var(--mkjb-heading-font); color: var(--mkjb-ink);}
+.mk-journal-book .mkjb-empty p {font-family: var(--mkjb-body-font); color: var(--mkjb-muted);}
+.mk-journal-book .mkjb-drop-hint {color: var(--mkjb-ink); background: var(--mkjb-paper); border-color: var(--mkjb-accent);}
+.mk-journal-book .mkjb-book-controls [data-mkjb-action="appearance"] {display: grid; place-items: center;}
+.mk-journal-book [data-mkjb-style="field"] .mkjb-source {font-style: normal;}
+.mk-journal-book [data-mkjb-style="field"] .mkjb-kicker {letter-spacing: 1.5px;}
+@media (max-height: 700px) {.mk-journal-book .mkjb-page-title {font-size: var(--mkjb-title-compact);}}

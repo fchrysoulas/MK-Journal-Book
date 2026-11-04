@@ -1,0 +1,22 @@
+{
+  "id": "mk-journal-book",
+  "title": "MK Journal Book",
+  "description": "Floating journal books with search, reader memory, custom tags, reorderable indexes, ribbon bookmarks, multiple movable/resizable notes, customizable animated covers, local sounds and image viewing.",
+  "version": "0.14.1",
+  "authors": [
+    {
+      "name": "Mikrokouneli"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "maximum": "14"
+  },
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/book.css",
+    "styles/presets.css"
+  ]
+}
