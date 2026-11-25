@@ -6,11 +6,18 @@ Create named journal books with their own owners and contents. Each opens as a f
 
 ## Install or update
 
-1. Extract the complete ZIP into Foundry's user data `Data/modules/`, replacing the previous `mk-journal-book` folder.
-2. Confirm the manifest is at `Data/modules/mk-journal-book/module.json` without another nested directory.
-3. Restart Foundry, enable **MK Journal Book** in your world, and reload connected clients.
+1. In Foundry's **Setup → Add-on Modules**, click **Install Module**.
+2. Paste this URL into **Manifest URL** and click **Install**:
 
-This is a manual installation ZIP. It does not include a hosted installation manifest URL. Hosted services need their supported custom-module upload workflow.
+   ```text
+   https://github.com/fchrysoulas/MK-Journal-Book/releases/latest/download/module.json
+   ```
+
+3. Open your world and enable **MK Journal Book** in **Manage Modules**.
+
+Use Foundry's **Check for Updates** to install future releases.
+
+For manual installation, download `mk-journal-book.zip` from the [latest release](https://github.com/fchrysoulas/MK-Journal-Book/releases/latest) and extract its contents into Foundry's user data `Data/modules/mk-journal-book/`, replacing the previous files. Confirm the manifest is at `Data/modules/mk-journal-book/module.json` without another nested directory, then restart Foundry and reload connected clients. Hosted services need their supported custom-module installation or upload workflow.
 
 ## Create a book and assign an owner
 
